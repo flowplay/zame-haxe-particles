@@ -14,6 +14,7 @@ import org.zamedev.particles.internal.GLUtilsExt;
 import org.zamedev.particles.internal.Matrix4;
 import org.zamedev.particles.internal.OpenGLViewExt;
 import org.zamedev.particles.internal.SizeUtils;
+import openfl.display.Tilesheet;
 
 // http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage3D.html
 // https://github.com/openfl/openfl-samples/blob/master/SimpleOpenGLView/Source/Main.hx
@@ -44,7 +45,7 @@ class GLViewParticleRenderer extends OpenGLViewExt implements ParticleSystemRend
     private var matrixUniformLocation : GLUniformLocation;
     private var imageUniformLocation : GLUniformLocation;
 
-    public function addParticleSystem(ps : ParticleSystem) : ParticleSystemRenderer {
+    public function addParticleSystem(ps : ParticleSystem, ?tilesheet:Tilesheet, ?textureId : Float, ?textureWidth : Float) : ParticleSystemRenderer {
         if (!initialized) {
             initGl();
             initialized = true;

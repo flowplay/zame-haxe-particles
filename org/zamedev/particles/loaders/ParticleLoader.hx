@@ -11,12 +11,12 @@ import org.zamedev.particles.ParticleSystem;
 import org.zamedev.particles.internal.tiff.TiffDecoder;
 
 class ParticleLoader {
-    public static function load(path : String) : ParticleSystem {
+    public static function load(path : String, ?imagePath: String) : ParticleSystem {
         var ext = Path.extension(path).toLowerCase();
 
         switch (ext) {
             case "plist":
-                return PlistParticleLoader.load(path);
+                return PlistParticleLoader.load(path, imagePath);
 
             case "json":
                 return JsonParticleLoader.load(path);

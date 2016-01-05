@@ -53,6 +53,7 @@ class ParticleSystem {
     public var blendFuncSource : Int;
     public var blendFuncDestination : Int;
     public var textureBitmapData : BitmapData;
+    public var textureName : String;
     public var active : Bool;
     public var restart : Bool;
     public var particleScaleX : Float;

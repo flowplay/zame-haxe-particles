@@ -9,6 +9,7 @@ import openfl.display3D.Context3DRenderMode;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.gl.GL;
+import openfl.display.Tilesheet;
 
 typedef Stage3DRendererData = {
     ps : ParticleSystem,
@@ -33,7 +34,7 @@ class Stage3DParticleRenderer extends Sprite implements ParticleSystemRenderer {
         mouseEnabled = false;
     }
 
-    public function addParticleSystem(ps : ParticleSystem) : ParticleSystemRenderer {
+    public function addParticleSystem(ps : ParticleSystem, ?tilesheet:Tilesheet, ?textureId : Float, ?textureWidth : Float) : ParticleSystemRenderer {
         if (dataList.length == 0) {
             addEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
@@ -55,7 +56,7 @@ class Stage3DParticleRenderer extends Sprite implements ParticleSystemRenderer {
             ps: ps,
             tilesheet: tilesheet,
             tileData: tileData,
-            updated: false,
+            updated: false
         });
 
         return this;

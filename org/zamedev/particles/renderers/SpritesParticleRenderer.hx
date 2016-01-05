@@ -6,6 +6,7 @@ import openfl.events.Event;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.gl.GL;
+import openfl.display.Tilesheet;
 
 typedef SpriteInfo = {
     sprite : Sprite,
@@ -22,7 +23,7 @@ typedef SpritesParticleRendererData = {
 class SpritesParticleRenderer extends Sprite implements ParticleSystemRenderer {
     private var dataList : Array<SpritesParticleRendererData> = [];
 
-    public function addParticleSystem(ps : ParticleSystem) : ParticleSystemRenderer {
+    public function addParticleSystem(ps : ParticleSystem, ?tilesheet:Tilesheet, ?textureId : Float, ?textureWidth : Float) : ParticleSystemRenderer {
         if (dataList.length == 0) {
             addEventListener(Event.ENTER_FRAME, onEnterFrame);
         }

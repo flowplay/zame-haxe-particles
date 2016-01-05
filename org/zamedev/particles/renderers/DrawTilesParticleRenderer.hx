@@ -18,7 +18,9 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
 
     private var dataList : Array<DrawTilesParticleRendererData> = [];
 
-    #if (html5 && dom)
+    private var _ethalonSize : Float;
+
+#if (html5 && dom)
         private var styleIsDirty = true;
     #end
 
@@ -27,28 +29,38 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
         mouseEnabled = false;
     }
 
-    public function addParticleSystem(ps : ParticleSystem) : ParticleSystemRenderer {
+    public function addParticleSystem(ps : ParticleSystem, ?tilesheet : Tilesheet, ?textureId : Float, ?textureWidth : Float ) : ParticleSystemRenderer {
         if (dataList.length == 0) {
             addEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
 
         ps.__initialize();
 
-        var tilesheet = new Tilesheet(ps.textureBitmapData);
+        if(tilesheet == null) {
+            tilesheet = new Tilesheet(ps.textureBitmapData);
+            tilesheet.addTileRect(
+                ps.textureBitmapData.rect.clone(),
+                new Point(ps.textureBitmapData.rect.width / 2, ps.textureBitmapData.rect.height / 2)
+            );
 
-        tilesheet.addTileRect(
-            ps.textureBitmapData.rect.clone(),
-            new Point(ps.textureBitmapData.rect.width / 2, ps.textureBitmapData.rect.height / 2)
-        );
+            _ethalonSize = ps.textureBitmapData.width;
+        } else {
+            _ethalonSize = textureWidth != null ? textureWidth : 10;
+        }
 
         var tileData = new Array<Float>();
-        tileData[Std.int(ps.maxParticles * TILE_DATA_FIELDS - 1)] = 0.0; // Std.int(...) is required for neko
+
+        for(i in 0...ps.maxParticles) {
+            var tileIdIndex = Std.int(i * TILE_DATA_FIELDS + 2);
+            tileData[Std.int(i * TILE_DATA_FIELDS + TILE_DATA_FIELDS - 1)] = 0.0;
+            tileData[tileIdIndex] = textureId != null ? textureId : 0.0;
+        }
 
         dataList.push({
             ps: ps,
             tilesheet: tilesheet,
             tileData: tileData,
-            updated: false,
+            updated: false
         });
 
         return this;
@@ -103,7 +115,6 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
             var ps = data.ps;
             var tileData = data.tileData;
             var index : Int = 0;
-            var ethalonSize : Float = ps.textureBitmapData.width;
 
             var flags = (ps.blendFuncSource == GL.SRC_ALPHA && ps.blendFuncDestination == GL.ONE
                 ? Tilesheet.TILE_BLEND_ADD
@@ -115,8 +126,8 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
 
                 tileData[index] = particle.position.x * ps.particleScaleX; // x
                 tileData[index + 1] = particle.position.y * ps.particleScaleY; // y
-                tileData[index + 2] = 0.0; // tileId
-                tileData[index + 3] = particle.particleSize / ethalonSize * ps.particleScaleSize; // scale
+                //tileData[index + 2] = 0.0; // tileId
+                tileData[index + 3] = particle.particleSize / _ethalonSize * ps.particleScaleSize; // scale
                 tileData[index + 4] = particle.rotation; // rotation
                 tileData[index + 5] = particle.color.r;
                 tileData[index + 6] = particle.color.g;
