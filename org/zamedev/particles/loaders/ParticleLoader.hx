@@ -19,10 +19,10 @@ class ParticleLoader {
                 return PlistParticleLoader.load(path, imagePath);
 
             case "json":
-                return JsonParticleLoader.load(path);
+                return JsonParticleLoader.load(path, imagePath);
 
             case "pex" | "lap":
-                return PexLapParticleLoader.load(path);
+                return PexLapParticleLoader.load(path, imagePath);
 
             default:
                 throw new Error('Unsupported extension "${ext}"');

@@ -11,7 +11,7 @@ import org.zamedev.particles.util.ParticleVector;
 using org.zamedev.particles.util.DynamicTools;
 
 class JsonParticleLoader {
-    public static function load(path : String) : ParticleSystem {
+    public static function load(path : String, ?imagePath: String) : ParticleSystem {
         var map:DynamicExt = Json.parse(Assets.getText(path));
         var ps = new ParticleSystem();
 
@@ -52,7 +52,15 @@ class JsonParticleLoader {
         ps.tangentialAccelerationVariance = map["tangentialAccelVariance"].asFloat();
         ps.blendFuncSource = map["blendFuncSource"].asInt();
         ps.blendFuncDestination = map["blendFuncDestination"].asInt();
-        ps.textureBitmapData = ParticleLoader.loadTexture(map["textureImageData"].asString(), map["textureFileName"].asString(), path);
+        if(imagePath != null) {
+            ps.textureName = imagePath + map["textureFileName"].asString();
+            trace('textureName = ' + ps.textureName);
+        } else {
+            trace('default loading texture');
+            ps.textureBitmapData = ParticleLoader.loadTexture(map["textureImageData"].asString(), map["textureFileName"].asString(), path);
+        }
+
+
         ps.yCoordMultiplier = (map["yCoordFlipped"].asInt() == 1 ? -1.0 : 1.0);
 
         return ps;

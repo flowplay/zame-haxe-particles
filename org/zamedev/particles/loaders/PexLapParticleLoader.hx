@@ -8,7 +8,7 @@ import org.zamedev.particles.util.ParticleColor;
 import org.zamedev.particles.util.ParticleVector;
 
 class PexLapParticleLoader {
-    public static function load(path : String) : ParticleSystem {
+    public static function load(path : String, ?imagePath: String) : ParticleSystem {
         var root = Xml.parse(Assets.getText(path)).firstElement();
 
         if (root.nodeName != "particleEmitterConfig" && root.nodeName != "lanicaAnimoParticles") {
@@ -60,7 +60,14 @@ class PexLapParticleLoader {
         ps.tangentialAccelerationVariance = parseFloatNode(map["tangentialAccelVariance"]);
         ps.blendFuncSource = parseIntNode(map["blendFuncSource"]);
         ps.blendFuncDestination = parseIntNode(map["blendFuncDestination"]);
-        ps.textureBitmapData = ParticleLoader.loadTexture(map["texture"].get("data"), map["texture"].get("name"), path);
+
+        if(imagePath != null) {
+            ps.textureName = imagePath + map["texture"].get("name");
+        } else {
+            trace('default loading texture');
+            ps.textureBitmapData = ParticleLoader.loadTexture(map["texture"].get("data"), map["texture"].get("name"), path);
+        }
+
         ps.yCoordMultiplier = (parseIntNode(map["yCoordFlipped"]) == 1 ? -1.0 : 1.0);
 
         return ps;

@@ -11,6 +11,7 @@ typedef DrawTilesParticleRendererData = {
     tilesheet : Tilesheet,
     tileData : Array<Float>,
     updated : Bool,
+    textureWidth : Float
 };
 
 class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer {
@@ -60,7 +61,8 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
             ps: ps,
             tilesheet: tilesheet,
             tileData: tileData,
-            updated: false
+            updated: false,
+            textureWidth: textureWidth
         });
 
         return this;
@@ -123,11 +125,13 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
 
             for (i in 0 ... ps.__particleCount) {
                 var particle = ps.__particleList[i];
+                var scale = particle.particleSize / _ethalonSize * ps.particleScaleSize; // scale
+                var scaledTextureSize = (data.textureWidth / 2) * scale;
 
-                tileData[index] = particle.position.x * ps.particleScaleX; // x
-                tileData[index + 1] = particle.position.y * ps.particleScaleY; // y
+                tileData[index] = particle.position.x * ps.particleScaleX  - scaledTextureSize; // x
+                tileData[index + 1] = particle.position.y * ps.particleScaleY - scaledTextureSize; // y
                 //tileData[index + 2] = 0.0; // tileId
-                tileData[index + 3] = particle.particleSize / _ethalonSize * ps.particleScaleSize; // scale
+                tileData[index + 3] = scale;
                 tileData[index + 4] = particle.rotation; // rotation
                 tileData[index + 5] = particle.color.r;
                 tileData[index + 6] = particle.color.g;
