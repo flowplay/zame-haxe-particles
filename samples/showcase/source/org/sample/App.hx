@@ -10,9 +10,10 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import org.zamedev.particles.ParticleSystem;
 import org.zamedev.particles.loaders.ParticleLoader;
+import org.zamedev.particles.loaders.PixiParticleLoader;
 import org.zamedev.particles.renderers.DefaultParticleRenderer;
 
-#if (flash11 && zameparticles_stage3d)
+#if (flash11 && zameparticles_stage3d && openfl < "4.0")
     import com.asliceofcrazypie.flash.TilesheetStage3D;
     import openfl.display3D.Context3DRenderMode;
 #end
@@ -26,7 +27,7 @@ class App extends Sprite {
     public function new() : Void {
         super();
 
-        #if (flash11 && zameparticles_stage3d)
+        #if (flash11 && zameparticles_stage3d && openfl < "4.0")
             addEventListener(Event.ADDED_TO_STAGE, function(_) {
                 TilesheetStage3D.init(stage, 0, 5, ready, Context3DRenderMode.AUTO);
             });
@@ -36,7 +37,7 @@ class App extends Sprite {
     }
 
     private function ready(result : String) : Void {
-        #if (flash11 && zameparticles_stage3d)
+        #if (flash11 && zameparticles_stage3d && openfl < "4.0")
             if (result != "success") {
                 trace("Stage3D error. Probably wrong wmode.");
                 return;
@@ -50,13 +51,13 @@ class App extends Sprite {
 
         addChild(new FPS(0, 0, 0xff0000));
 
-        addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-        addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-        addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+        stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+        stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+        stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
     }
 
     private function addClickableArea() : Void {
-        #if (flash11 && zameparticles_stage3d)
+        #if (flash11 && zameparticles_stage3d && openfl < "4.0")
             var shape = new openfl.display.Shape();
             shape.graphics.beginFill(0x030b2d);
             shape.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
@@ -129,6 +130,8 @@ class App extends Sprite {
         particleSystemList.push(ParticleLoader.load("particle/iris.plist"));
         particleSystemList.push(ParticleLoader.load("particle/hyperflash.plist"));
         particleSystemList.push(ParticleLoader.load("particle/dust.plist"));
+        particleSystemList.push(PixiParticleLoader.load("particle/pixi-flame.json", "pixi-flame-2.png"));
+        particleSystemList.push(PixiParticleLoader.load("particle/pixi-gas.json", "pixi-gas-1.png"));
 
         for (particleSystem in particleSystemList) {
             particlesRenderer.addParticleSystem(particleSystem);

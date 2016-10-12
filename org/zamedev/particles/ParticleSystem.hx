@@ -60,9 +60,9 @@ class ParticleSystem {
     public var particleScaleY : Float;
     public var particleScaleSize : Float;
     public var yCoordMultiplier : Float;
+    public var emissionFreq : Float;
 
     private var prevTime : Float;
-    private var emissionRate : Float;
     private var emitCounter : Float;
     private var elapsedTime : Float;
 
@@ -75,6 +75,7 @@ class ParticleSystem {
         particleScaleX = 1.0;
         particleScaleY = 1.0;
         particleScaleSize = 1.0;
+        emissionFreq = 0.0;
     }
 
     public function __initialize() : ParticleSystem {
@@ -87,9 +88,16 @@ class ParticleSystem {
         }
 
         prevTime = -1.0;
-        emissionRate = maxParticles / Math.max(0.0001, particleLifespan);
         emitCounter = 0.0;
         elapsedTime = 0.0;
+
+        if (emissionFreq <= 0.0) {
+            var emissionRate : Float = maxParticles / Math.max(0.0001, particleLifespan);
+
+            if (emissionRate > 0.0) {
+                emissionFreq = 1.0 / emissionRate;
+            }
+        }
 
         __particleList = new Array<Particle>();
         __particleCount = 0;
@@ -117,18 +125,17 @@ class ParticleSystem {
 
         prevTime = currentTime;
 
-        if (active && emissionRate > 0.0) {
-            var rate = 1.0 / emissionRate;
+        if (active && emissionFreq > 0.0) {
             emitCounter += dt;
 
-            while (__particleCount < maxParticles && emitCounter > rate) {
+            while (__particleCount < maxParticles && emitCounter > emissionFreq) {
                 initParticle(__particleList[__particleCount]);
                 __particleCount++;
-                emitCounter -= rate;
+                emitCounter -= emissionFreq;
             }
 
-            if (emitCounter > rate) {
-                emitCounter = (emitCounter % rate);
+            if (emitCounter > emissionFreq) {
+                emitCounter = (emitCounter % emissionFreq);
             }
 
             elapsedTime += dt;

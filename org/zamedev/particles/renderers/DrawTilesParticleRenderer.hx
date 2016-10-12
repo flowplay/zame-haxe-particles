@@ -1,5 +1,9 @@
 package org.zamedev.particles.renderers;
 
+#if (openfl >= "4.0")
+#error "ERROR: Tilesheet was removed from OpenFL 4"
+#end
+
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
 import openfl.events.Event;
@@ -44,10 +48,10 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
                 new Point(ps.textureBitmapData.rect.width / 2, ps.textureBitmapData.rect.height / 2)
             );
 
-            _ethalonSize = ps.textureBitmapData.width;
-        } else {
-            _ethalonSize = textureWidth != null ? textureWidth : 10;
-        }
+        tilesheet.addTileRect(
+            ps.textureBitmapData.rect.clone(),
+            new Point(ps.textureBitmapData.rect.width * 0.5, ps.textureBitmapData.rect.height * 0.5)
+        );
 
         var tileData = new Array<Float>();
 
@@ -81,6 +85,7 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
 
         if (dataList.length == 0) {
             removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+            graphics.clear();
         }
 
         return this;
@@ -133,10 +138,10 @@ class DrawTilesParticleRenderer extends Sprite implements ParticleSystemRenderer
                 //tileData[index + 2] = 0.0; // tileId
                 tileData[index + 3] = scale;
                 tileData[index + 4] = particle.rotation; // rotation
-                tileData[index + 5] = particle.color.r;
+                tileData[index + 5] = #if webgl particle.color.b #else particle.color.r #end;
                 tileData[index + 6] = particle.color.g;
-                tileData[index + 7] = particle.color.b;
-                tileData[index + 8] = particle.color.a;
+                tileData[index + 7] = #if webgl particle.color.r #else particle.color.b #end;
+                tileData[index + 8] = particle.color.a; // a
 
                 index += TILE_DATA_FIELDS;
             }

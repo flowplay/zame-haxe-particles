@@ -1,5 +1,7 @@
 # Particle system for OpenFl
 
+*(and for KHA, see below)*
+
 ![](http://blog.zame-dev.org/wp-content/uploads/2015/03/Screen-Shot-2015-03-18-at-12.53.43.png)
 
 [Demo](http://blog.zame-dev.org/pub/particles/html5-dom-v3/)
@@ -9,9 +11,29 @@ Features:
  - Can load files from Particle Designer or [Particle Designer 2](https://71squared.com/en/particledesigner).
  - Support for embedded textures, both zipped or not.
  - Can load files from [Starling Particle Editor](http://onebyonedesign.com/flash/particleeditor/).
- - Has 4 renderers - sprites, drawTiles, stage3d, and GL renderer.
+ - Has 5 renderers - sprites, drawTiles (OpenFL 3) / tilemap (OpenFL 4), stage3d (OpenFL 4), and GL renderer.
 
 **NOTE: work in progress, more features coming.**
+
+## Important note about OpenFL 4
+
+**Tilesheet and tilemap**
+
+Tilesheet support was removed from OpenFL 4 in favour of new Tilemap / Tilesheet classes. That's fine, but:
+
+- new API doesn't support rotating about arbitrary pivot point (however this can be achieved by direct modification of transform matrix);
+- new API doesn't support color transform;
+- new API doesn't support blending modes.
+
+You can use this renderer, it fast, but ugly.
+
+**Sprites**
+
+Work well for flash, work very slow for other targets (http://community.openfl.org/t/openfl-4-sprites-and-or-haxe-3-3-slow-as-hell/8132).
+
+**GL renderer**
+
+Still work fine, but only for html5 and only in `-Ddom` mode.
 
 ## Installation
 
@@ -96,7 +118,7 @@ If you use [TilesheetStage3D](https://github.com/as3boyan/TilesheetStage3D) libr
 
 All other targets should use drawTiles renderer:
 
-  - html5 in canvas mode - still pretty fast, doesn't support color effects. Can render incorrectly due to bug in openfl, please apply [this patch](https://github.com/openfl/openfl/pull/434) if you encounter it.
+  - html5 in canvas mode - still pretty fast, doesn't support color effects. Can render incorrectly due to bug in openfl, please apply [this patch](https://github.com/openfl/openfl/pull/1113) ([or this for earlier versions of openfl](https://github.com/openfl/openfl/pull/434)) if you encounter it.
   - native - fast, support color effects, hovewer in some cases GL renderer looks better.
 
 ## Roadmap for future
@@ -107,5 +129,14 @@ All other targets should use drawTiles renderer:
 - [x] Create importer for particles in luxeengine
 - [x] Implement SpritesRenderer
 - [x] Implement Stage3DRenderer
+- [x] Implement TilemapRenderer
 - [ ] Support for lime / snow directly without openfl / luxeengine
 - [ ] Support for HaxeFlixel and / or HaxePunk?
+- [x] Partial support for pixi particles
+- [ ] Full support for pixi particles
+- [ ] Fix rotation calculations (to be the same for all renderers)
+- [ ] Support KHA directly in this library
+
+## KHA port by RafaelOliveira
+
+https://github.com/RafaelOliveira/z-particles

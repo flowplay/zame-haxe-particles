@@ -2,6 +2,10 @@ package org.zamedev.particles.renderers;
 
 #if (flash11 && zameparticles_stage3d)
 
+#if (openfl >= "4.0")
+#error "ERROR: Tilesheet was removed from OpenFL 4"
+#end
+
 import com.asliceofcrazypie.flash.TilesheetStage3D;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
@@ -46,7 +50,7 @@ class Stage3DParticleRenderer extends Sprite implements ParticleSystemRenderer {
 
         tilesheet.addTileRect(
             ps.textureBitmapData.rect.clone(),
-            new Point(ps.textureBitmapData.rect.width / 2, ps.textureBitmapData.rect.height / 2)
+            new Point(ps.textureBitmapData.rect.width * 0.5, ps.textureBitmapData.rect.height * 0.5)
         );
 
         var tileData = new Array<Float>();
@@ -119,7 +123,7 @@ class Stage3DParticleRenderer extends Sprite implements ParticleSystemRenderer {
                 tileData[index + 1] = particle.position.y * ps.particleScaleY; // y
                 tileData[index + 2] = 0.0; // tileId
                 tileData[index + 3] = particle.particleSize / ethalonSize * ps.particleScaleSize; // scale
-                tileData[index + 4] = particle.rotation; // rotation
+                tileData[index + 4] = particle.rotation + Math.PI * 0.5; // rotation
                 tileData[index + 5] = particle.color.r * a;
                 tileData[index + 6] = particle.color.g * a;
                 tileData[index + 7] = particle.color.b * a;
